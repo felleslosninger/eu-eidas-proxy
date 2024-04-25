@@ -24,7 +24,7 @@
     <entry key="service.countrycode">NO</entry>
 
     <!--service Metadata -->
-    <entry key="service.metadata.url">EU-PROXY-URL/EidasNodeProxy/ServiceMetadata</entry>
+    <entry key="service.metadata.url">EU-PROXY-URL/ServiceMetadata</entry>
 
     <!-- ProxyService contact -->
     <entry key="service.contact.support.email">servicedesk@digdir.no</entry>
@@ -43,12 +43,12 @@
     <entry key="service.organization.url">https://www.digdir.no/</entry>
 
     <!-- Eidas Node Service Metadata Single Sign On locations for ServiceMetadata-->
-    <entry key="ssos.serviceMetadataGeneratorIDP.redirect.location">EU-PROXY-URL/EidasNodeProxy/ColleagueRequest</entry>
-    <entry key="ssos.serviceMetadataGeneratorIDP.post.location">EU-PROXY-URL/EidasNodeProxy/ColleagueRequest</entry>
+    <entry key="ssos.serviceMetadataGeneratorIDP.redirect.location">EU-PROXY-URL/ColleagueRequest</entry>
+    <entry key="ssos.serviceMetadataGeneratorIDP.post.location">EU-PROXY-URL/ColleagueRequest</entry>
 
     <!-- SECURITY POLICY -->
     <!-- uri used for the CSP reporting feature-->
-    <entry key="security.header.CSP.report.uri">EU-PROXY-URL/EidasNodeProxy/cspReportHandler</entry>
+    <entry key="security.header.CSP.report.uri">EU-PROXY-URL/cspReportHandler</entry>
 
     <!-- value of the NodeCountry to be published in the metadata-->
     <entry key="metadata.node.country">NO</entry>
@@ -56,6 +56,6 @@
     <!-- Restrict metadata retrieval to https -->
     <entry key="metadata.restrict.http">true</entry>
     <!--URL for specific-proxyService requests receiver only needed when specific  -->
-    <entry key="specific.proxyservice.request.receiver">EIDAS-PROXY-URL/SpecificProxyService/ProxyServiceRequest</entry>
+    <entry key="specific.proxyservice.request.receiver">EIDAS-PROXY-URL/ProxyServiceRequest</entry>
 
 </properties>

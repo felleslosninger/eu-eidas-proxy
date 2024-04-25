@@ -34,7 +34,7 @@ RUN mkdir -p $CATALINA_HOME/eidas-proxy-config/
 COPY --from=builder /data/eidas-proxy-config/ $CATALINA_HOME/eidas-proxy-config
 
 # Add war files to webapps: /usr/local/tomcat/webapps
-COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/
+COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
 
 # eIDAS audit log folder
 RUN mkdir -p ${CATALINA_HOME}/eidas/logs && chmod 744 ${CATALINA_HOME}/eidas/logs

@@ -30,7 +30,7 @@ RUN mkdir -p $CATALINA_HOME/eidas-proxy-config/
 COPY --from=builder /data/eidas-proxy-config/ $CATALINA_HOME/eidas-proxy-config
 
 # Add war files to webapps: /usr/local/tomcat/webapps
-COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/
+COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
 RUN chmod -R 770 ${CATALINA_HOME}/webapps
 
 # Add Cache Ignite work folder. TODO: Remove when switch to Redis.
