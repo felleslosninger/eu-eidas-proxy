@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <!--Redis config -->
+    <entry key="redis.host">eidas-redis-sentinel-headless</entry>
+    <entry key="redis.port">26379</entry>
+    <entry key="redis.password">${eidas.password}</entry>
+</properties>
