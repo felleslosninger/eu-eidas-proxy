@@ -20,6 +20,7 @@ RUN curl -H "Authorization: token ${GIT_PACKAGE_TOKEN}" -L -O \
 ARG EIDAS_NODE_VERSION=2.7.1
 RUN git clone --depth 1 --branch eidasnode-${EIDAS_NODE_VERSION} https://ec.europa.eu/digital-building-blocks/code/scm/eid/eidasnode-pub.git
 
+RUN mkdir -p eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib && cp /data/eidas-redis-*${REDIS_LIB_VERSION}.jar eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib/ && cp /data/eidas-redis-lib-${REDIS_LIB_VERSION}.pom eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib/
 RUN cd eidasnode-pub && mvn clean install --file EIDAS-Parent/pom.xml -P NodeOnly -P-specificCommunicationJcacheIgnite -DskipTests
 # -P-nodeJcacheIgnite
 RUN mkdir -p eidas-proxy-config/
