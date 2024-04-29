@@ -5,7 +5,7 @@
 <properties>
 
     <!--Redis config -->
-    <entry key="redis.host">eidas-redis-sentinel-headless</entry>
-    <entry key="redis.port">26379</entry>
-    <entry key="redis.password">${eidas.password}</entry>
+    <entry key="redis.host">redis</entry>
+    <entry key="redis.port">6379</entry>
+    <entry key="redis.password"></entry>
 </properties>
