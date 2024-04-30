@@ -26,9 +26,12 @@
 
     <bean id="nodeSpecificProxyserviceRequestCache" class="eu.eidas.specificcommunication.CommunicationCache">
         <constructor-arg ref="nodeSpecificProxyserviceRequestCacheImpl"/>
+        <constructor-arg ref="redisProxyTemplate"/>
     </bean>
 
     <bean id="specificNodeProxyserviceResponseCache" class="eu.eidas.specificcommunication.CommunicationCache">
         <constructor-arg ref="specificNodeProxyserviceResponseCacheImpl"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+
     </bean>
 </beans>
