@@ -14,11 +14,5 @@
     <import resource="classpath:redisImplSpecificCommunicationBeans.xml" />
     <context:annotation-config/>
     <context:component-scan base-package="eu.eidas.node"/>
-    <bean id="nodeSpecificProxyserviceRequestCache" class="eu.eidas.specificcommunication.CommunicationCache">
-        <constructor-arg ref="nodeSpecificProxyserviceRequestCacheImpl"/>
-    </bean>
 
-    <bean id="specificNodeProxyserviceResponseCache" class="eu.eidas.specificcommunication.CommunicationCache">
-        <constructor-arg ref="specificNodeProxyserviceResponseCacheImpl"/>
-    </bean>
 </beans>

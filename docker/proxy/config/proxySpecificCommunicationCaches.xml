@@ -20,18 +20,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!--moved content to jCacheSpecificCommunicationCaches.xml temporary, because it prefers to read that one-->
 
-    <!--Proxy to specific-->
-    <import resource="classpath:redisImplSpecificCommunicationBeans.xml" />
 
-    <bean id="nodeSpecificProxyserviceRequestCache" class="eu.eidas.specificcommunication.CommunicationCache">
-        <constructor-arg ref="nodeSpecificProxyserviceRequestCacheImpl"/>
-        <constructor-arg ref="redisProxyTemplate"/>
-    </bean>
-
-    <bean id="specificNodeProxyserviceResponseCache" class="eu.eidas.specificcommunication.CommunicationCache">
-        <constructor-arg ref="specificNodeProxyserviceResponseCacheImpl"/>
-        <constructor-arg ref="redisProxyTemplate"/>
-
-    </bean>
 </beans>
