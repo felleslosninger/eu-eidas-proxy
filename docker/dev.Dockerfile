@@ -2,12 +2,10 @@ FROM maven:3.9-eclipse-temurin-11 as builder
 
 WORKDIR /data
 
-#
 ARG GIT_PACKAGE_TOKEN
-ARG REDIS_LIB_VERSION=0.0.6
+
 # Download our redis-lib
-#RUN curl -H "Authorization: token ${GIT_PACKAGE_TOKEN}" -L -O \
-#  https://maven.pkg.github.com/felleslosninger/eidas-redis-lib/no/idporten/eidas/eidas-redis-lib/${REDIS_LIB_VERSION}/eidas-redis-lib-${REDIS_LIB_VERSION}.pom
+ARG REDIS_LIB_VERSION=0.0.6
 RUN curl -H "Authorization: token ${GIT_PACKAGE_TOKEN}" -L -O \
   https://maven.pkg.github.com/felleslosninger/eidas-redis-lib/no/idporten/eidas/eidas-redis/${REDIS_LIB_VERSION}/eidas-redis-${REDIS_LIB_VERSION}.jar
 RUN curl -H "Authorization: token ${GIT_PACKAGE_TOKEN}" -L -O \
@@ -16,11 +14,11 @@ RUN curl -H "Authorization: token ${GIT_PACKAGE_TOKEN}" -L -O \
   https://maven.pkg.github.com/felleslosninger/eidas-redis-lib/no/idporten/eidas/eidas-redis-specific-communication/${REDIS_LIB_VERSION}/eidas-redis-specific-communication-${REDIS_LIB_VERSION}.jar
 
 
-# Download EU-eidas software
+# Download & build EU-eidas software
 ARG EIDAS_NODE_VERSION=2.7.1
 RUN git clone --depth 1 --branch eidasnode-${EIDAS_NODE_VERSION} https://ec.europa.eu/digital-building-blocks/code/scm/eid/eidasnode-pub.git
 
-RUN mkdir -p eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib && cp /data/eidas-redis-*${REDIS_LIB_VERSION}.jar eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib/ #&& cp /data/eidas-redis-lib-${REDIS_LIB_VERSION}.pom eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib/
+RUN mkdir -p eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib && cp /data/eidas-redis-*${REDIS_LIB_VERSION}.jar eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/lib/
 COPY docker/proxy/config/proxySpecificCommunicationCaches.xml eidasnode-pub/EIDAS-SpecificCommunicationDefinition/src/main/resources/
 RUN cd eidasnode-pub && mvn clean install --file EIDAS-Parent/pom.xml -P NodeOnly -P-specificCommunicationJcacheIgnite -DskipTests
 
