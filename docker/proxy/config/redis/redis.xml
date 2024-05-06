@@ -6,4 +6,6 @@
     <entry key="redis.host">redis</entry>
     <entry key="redis.port">6379</entry>
     <entry key="redis.password"></entry>
+    <entry key="redis.sentinelNodes"></entry>
+    <entry key="redis.sentinelMaster"></entry>
 </properties>
