@@ -1,0 +1,105 @@
+<!-- Spring XML Configuration file -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- Import Java Config -->
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:redis/redis.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="propertyLoader"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <value>classpath:redis/redis.xml</value>
+        </property>
+    </bean>
+    <bean id="redisConfig" class="no.idporten.eidas.redis.cache.RedisConfig">
+        <property name="redisPassword" value="${redis.password}"/>
+        <property name="redisHost" value = "${redis.host}"/>
+        <property name="redisPort" value = "${redis.port}"/>
+    </bean>
+
+    <bean id="redisProxyConfig" class="no.idporten.eidas.redis.cache.proxy.RedisProxyConfig">
+    </bean>
+
+    <bean id="redisMetadataConfig" class="no.idporten.eidas.redis.cache.metadata.RedisMetadataConfig">
+    </bean>
+    <bean id="connectorFlowIdCacheImpl" class="no.idporten.eidas.redis.cache.RedisCache">
+        <constructor-arg type="java.lang.String"  value="connectorFlowIdCacheService"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+    <bean id="proxyServiceFlowIdCacheImpl" class="no.idporten.eidas.redis.cache.RedisCache">
+        <constructor-arg type="java.lang.String"  value="proxyServiceFlowIdCacheService"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+
+    <bean id="springServiceCMapAntiReplayProviderImpl" class="no.idporten.eidas.redis.cache.RedisCache"
+          lazy-init="true">
+        <constructor-arg type="java.lang.String" value="antiReplayCacheService"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+    <bean id="springConnectorCMapAntiReplayProviderImpl"
+          class="no.idporten.eidas.redis.cache.RedisCache" lazy-init="true">
+        <constructor-arg type="java.lang.String" value="antiReplayCacheConnector"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+    <!-- Correlation maps provided by Ignite for distributed environment, use these in productions! -->
+    <bean id="springConnectorCMapCorProviderImpl" class="no.idporten.eidas.redis.cache.RedisCache"
+          lazy-init="true">
+        <constructor-arg type="java.lang.String" value="connectorRequestCorrelationCacheService"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+    <bean id="springServiceCMapCorProviderImpl" class="no.idporten.eidas.redis.cache.RedisCache"
+          lazy-init="true">
+        <constructor-arg type="java.lang.String" value="proxyServiceRequestCorrelationCacheService"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+    <bean id="springConnectorCMapspecificLightCorProviderImpl"
+          class="no.idporten.eidas.redis.cache.RedisCache" lazy-init="true">
+        <constructor-arg type="java.lang.String" value="specificConnectorLtRequestCorrelationCacheService"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+
+    <bean id="nodeSpecificProxyserviceRequestCacheImpl" class="no.idporten.eidas.redis.cache.RedisCache">
+        <constructor-arg type="java.lang.String" value="${node.specific.proxyservice.request.cache.name}"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+
+    <bean id="specificNodeConnectorRequestCacheImpl" class="no.idporten.eidas.redis.cache.RedisCache">
+        <constructor-arg type="java.lang.String" value="${specific.node.connector.request.cache.name}"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+
+    <bean id="specificNodeProxyserviceResponseCacheImpl" class="no.idporten.eidas.redis.cache.RedisCache">
+        <constructor-arg type="java.lang.String" value="${specific.node.proxyservice.response.cache.name}"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+
+    <bean id="nodeSpecificConnectorResponseCacheImpl" class="no.idporten.eidas.redis.cache.RedisCache">
+        <constructor-arg type="java.lang.String" value="${node.specific.connector.response.cache.name}"/>
+        <constructor-arg ref="redisProxyTemplate"/>
+    </bean>
+
+    <bean id="nodeSpecificProxyserviceRequestCache" class="eu.eidas.specificcommunication.CommunicationCache">
+        <constructor-arg ref="nodeSpecificProxyserviceRequestCacheImpl"/>
+    </bean>
+
+    <bean id="specificNodeProxyserviceResponseCache" class="eu.eidas.specificcommunication.CommunicationCache">
+        <constructor-arg ref="specificNodeProxyserviceResponseCacheImpl"/>
+    </bean>
+
+    <!-- Simple cache for this just to verify the others -->
+    <bean id="metadataCacheImpl" class="no.idporten.eidas.redis.cache.metadata.SimpleMetadataCaching">
+        <constructor-arg type="java.lang.String" value="metadata"/>
+        <constructor-arg ref="redisMetadataTemplate"/>
+    </bean>
+</beans>

@@ -58,4 +58,5 @@
     <!--URL for specific-proxyService requests receiver only needed when specific  -->
     <entry key="specific.proxyservice.request.receiver">EIDAS-PROXY-URL/ProxyServiceRequest</entry>
 
+    <entry key="node.metadata.not.signed.descriptors">https://dummy.no</entry>
 </properties>
