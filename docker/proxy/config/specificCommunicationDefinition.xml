@@ -26,7 +26,7 @@
 
 	<!--secrets and algorithms for lightRequest token-->
 	<entry key="lightToken.proxyservice.request.issuer.name">specificCommunicationDefinitionProxyserviceRequest</entry>
-	<entry key="lightToken.proxyservice.request.secret">mySecretProxyserviceRequest</entry>
+	<entry key="lightToken.proxyservice.request.secret">${lightTokenProxyserviceRequestSecret}</entry>
 	<entry key="lightToken.proxyservice.request.algorithm">SHA-256</entry>
 
 	<!-- eIDAS-Node messages logging: Point 5 -->
@@ -35,7 +35,7 @@
 
 	<!--secrets and algorithms for lightResponse token-->
 	<entry key="lightToken.proxyservice.response.issuer.name">specificCommunicationDefinitionProxyserviceResponse</entry>
-	<entry key="lightToken.proxyservice.response.secret">mySecretProxyserviceResponse</entry>
+	<entry key="lightToken.proxyservice.response.secret">${lightTokenProxyserviceResponseSecret}</entry>
 	<entry key="lightToken.proxyservice.response.algorithm">SHA-256</entry>
 
 	<!--The value of incoming Light Response maximum number characters allowed-->
