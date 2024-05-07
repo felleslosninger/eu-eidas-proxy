@@ -37,6 +37,7 @@ services:
     entrypoint: "/bin/bash -c"
     command:
       - |
+        export CATALINA_OPTS="$CATALINA_OPTS -DredisPassword=${REDIS_PASSWORD} -DredisPort=${REDIS_PORT} -DredisHost=${REDIS_HOST} -DlightTokenProxyserviceRequestSecret=${LIGHT_TOKEN_PROXYSERVICE_REQUEST_SECRET} -DlightTokenProxyserviceResponseSecret=${LIGHT_TOKEN_PROXYSERVICE_RESPONSE_SECRET}"
         cd /usr/local/tomcat
         ./bin/catalina.sh run
 
