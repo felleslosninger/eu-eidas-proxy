@@ -1,5 +1,3 @@
-# Tomcat options jvm
-export CATALINA_OPTS="$CATALINA_OPTS -Xms512m -Xmx1024m"
 
 # bouncycastle. 
 export JAVA_OPTS="$JAVA_OPTS -Djava.security.properties=/opt/java/openjdk/conf/security/java_bc.security"

@@ -18,7 +18,7 @@ Add the following to your /etc/hosts file:
 
 Start docker containers:
 ```
-docker-compose --env-file docker.env up --build 
+docker-compose up --build 
 ```
 
 ### Run eidas-generic-proxy in test/production environment
