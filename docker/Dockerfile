@@ -34,17 +34,24 @@ RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/https:\/\/eu-eidas-connector.idporten.de
 
 FROM tomcat:9.0-jre11-temurin-jammy
 
+#Fjerner passord fra logger ved oppstart
+#RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
+# Fjerner default applikasjoner fra tomcat
+RUN rm -rf /usr/local/tomcat/webapps.dist
+
 COPY docker/bouncycastle/java_bc.security /opt/java/openjdk/conf/security/java_bc.security
 COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1.78.jar
 
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 
-RUN mkdir -p $CATALINA_HOME/eidas-proxy-config/
-COPY --from=builder /data/eidas-proxy-config/ $CATALINA_HOME/eidas-proxy-config
+RUN mkdir -p /etc/config
+COPY --from=builder /data/eidas-proxy-config/ /etc/config
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
 RUN chmod -R 770 ${CATALINA_HOME}/webapps
+
+RUN mkdir -p ${CATALINA_HOME}/conf/Catalina/localhost  && chmod 770 ${CATALINA_HOME}/conf/Catalina/localhost
 
 # eIDAS audit log folder
 RUN mkdir -p ${CATALINA_HOME}/eidas/logs && chmod 774 ${CATALINA_HOME}/eidas/logs

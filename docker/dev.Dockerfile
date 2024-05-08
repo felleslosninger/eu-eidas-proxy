@@ -37,6 +37,11 @@ RUN sed -i 's/metadata.restrict.http">true/metadata.restrict.http">false/g' eida
 
 FROM tomcat:9.0-jre11-temurin-jammy
 
+#Fjerner passord fra logger ved oppstart
+#RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
+# Fjerner default applikasjoner fra tomcat
+RUN rm -rf /usr/local/tomcat/webapps.dist
+
 COPY docker/bouncycastle/java_bc.security /opt/java/openjdk/conf/security/java_bc.security
 COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1.78.jar
 
@@ -45,8 +50,8 @@ RUN sed -i 's/port="8080"/port="8082"/' ${CATALINA_HOME}/conf/server.xml
 
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 
-RUN mkdir -p $CATALINA_HOME/eidas-proxy-config/
-COPY --from=builder /data/eidas-proxy-config/ $CATALINA_HOME/eidas-proxy-config
+RUN mkdir -p /etc/config
+COPY --from=builder /data/eidas-proxy-config/ /etc/config
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
