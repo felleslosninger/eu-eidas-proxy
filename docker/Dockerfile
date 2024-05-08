@@ -46,6 +46,7 @@ COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 
 RUN mkdir -p /etc/config
 COPY --from=builder /data/eidas-proxy-config/ /etc/config
+RUN chmod -R 770 /etc/config
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
