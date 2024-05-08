@@ -7,7 +7,7 @@ export JAVA_OPTS="$JAVA_OPTS --module-path /usr/local/lib/bcprov-jdk18on-1.78.ja
 export JAVA_OPTS="$JAVA_OPTS --add-modules org.bouncycastle.provider"
 
 # eidas config
-export EIDAS_PROXY_CONFIG_REPOSITORY="/usr/local/tomcat/eidas-proxy-config/"
+export EIDAS_PROXY_CONFIG_REPOSITORY="/etc/config/"
 export CLASSPATH=$CLASSPATH:$EIDAS_PROXY_CONFIG_REPOSITORY
 # Auditlogs config: -DLOG_HOME="<myDirectoryName>"
 export LOG_HOME="/usr/local/tomcat/eidas/logs"
