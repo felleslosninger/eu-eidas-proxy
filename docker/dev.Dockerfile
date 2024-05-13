@@ -50,7 +50,7 @@ RUN sed -i 's/port="8080"/port="8082"/' ${CATALINA_HOME}/conf/server.xml
 
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 
-RUN mkdir -p /etc/config
+RUN mkdir -p /etc/config/ && chmod 770 /etc/config/
 COPY --from=builder /data/eidas-proxy-config/ /etc/config
 
 # Add war files to webapps: /usr/local/tomcat/webapps
