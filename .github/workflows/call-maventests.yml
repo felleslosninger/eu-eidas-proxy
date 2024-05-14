@@ -12,18 +12,22 @@ jobs:
       IMAGE_NAME: my-local-registery/eu-eidas-proxy
       DOCKLE_HOST: "unix:///var/run/docker.sock"
     steps:
-      - name: Set imagetag as env variable
-        run: echo "IMAGETAG=$(date +'%Y-%m-%d-%H%M')-${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+      - name: Set image tag
+        id: set-image-tag
+        run: |
+          image_tag=$(date +'%Y-%m-%d-%H%M')-${GITHUB_SHA::8}
+          echo "image-tag=$image_tag" >> "$GITHUB_OUTPUT"
+          echo "- Image tag: $image_tag" >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/checkout@v4
       - name: Build the tagged Docker image
-        run: docker build --tag ${{ env.IMAGE_NAME}}:${{env.IMAGETAG}} --file docker/Dockerfile --build-arg GIT_PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}} .
+        run: docker build --tag ${{ env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}} --file docker/Dockerfile --build-arg GIT_PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}} .
       - uses: anchore/sbom-action@v0
         with:
-          image: ${{ env.IMAGE_NAME}}:${{env.IMAGETAG}}
+          image: ${{ env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@d710430a6722f083d3b36b8339ff66b32f22ee55 # pin@v0.19.0
         with:
-          image-ref: ${{ env.IMAGE_NAME}}:${{env.IMAGETAG}}
+          image-ref: ${{ env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
 

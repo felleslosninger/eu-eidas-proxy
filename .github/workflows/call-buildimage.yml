@@ -17,16 +17,20 @@ jobs:
       IMAGE_NAME: ${{ secrets.REGISTRY_URL }}/eu-eidas-proxy
       DOCKLE_HOST: "unix:///var/run/docker.sock"
     outputs:
-      image-version: ${{ steps.set-outputs.outputs.image-version }}
-      image-digest: ${{ steps.set-outputs.outputs.image-digest }}
+      image-tag: ${{ steps.set-image-tag.outputs.image-tag }}
+      image-digest: ${{ steps.set-image-digest.outputs.image-digest }}
     steps:
       - name: Set imagetag as env variable
-        run: echo "IMAGETAG=$(date +'%Y-%m-%d-%H%M')-${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+        id: set-image-tag
+        run: |
+          image_tag=$(date +'%Y-%m-%d-%H%M')-${GITHUB_SHA::8}
+          echo "image-tag=$image_tag" >> "$GITHUB_OUTPUT"
+          echo "- Image tag: $image_tag" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/checkout@v4
 
       - name: Build the tagged Docker image
-        run: docker build --tag ${{env.IMAGE_NAME}}:${{env.IMAGETAG}} --file docker/Dockerfile --build-arg GIT_PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}} .
+        run: docker build --tag ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}} --file docker/Dockerfile --build-arg GIT_PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}} .
       - name: Set trivyignore env if file exists
         id: set-trivyignore-path
         run: |
@@ -38,7 +42,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@d710430a6722f083d3b36b8339ff66b32f22ee55 # pin@v0.19.0
         with:
-          image-ref: ${{env.IMAGE_NAME}}:${{env.IMAGETAG}}
+          image-ref: ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}
           exit-code: "1"
           severity: "CRITICAL,HIGH"
           trivyignores: ${{ steps.set-trivyignore-path.outputs.trivyignore-path }}
@@ -53,15 +57,15 @@ jobs:
         with:
           scan-type: image
           format: github
-          image-ref: "${{env.IMAGE_NAME}}:${{env.IMAGETAG}}}"
-          output: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ env.IMAGETAG }}.json"
+          image-ref: "${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}}"
+          output: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ steps.set-image-tag.outputs.image-tag }}.json"
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload trivy report as a Github artifact
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # pin@v4.3.3
         with:
-          name: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ env.IMAGETAG }}"
-          path: "${{ github.workspace }}/sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ env.IMAGETAG }}.json"
+          name: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ steps.set-image-tag.outputs.image-tag }}"
+          path: "${{ github.workspace }}/sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ steps.set-image-tag.outputs.image-tag }}.json"
 
       - name: "Login to Azure Container registery"
         uses: azure/docker-login@v1
@@ -69,13 +73,13 @@ jobs:
           login-server: ${{ secrets.REGISTRY_URL }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      - run: docker push ${{env.IMAGE_NAME}}:${{env.IMAGETAG}}
+      - run: docker push ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}
 
-      - run: echo "IMAGE_DIGEST=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{env.IMAGETAG}}|cut -d '@' -f 2|cut -d ']' -f 1)" >> "$GITHUB_ENV"
+      - run: echo "IMAGE_DIGEST=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}|cut -d '@' -f 2|cut -d ']' -f 1)" >> "$GITHUB_ENV"
       - name: Set image digest
         id: set-image-digest
         run: |
-          image_digest=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{env.IMAGETAG}} \
+          image_digest=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}} \
             | cut -d '@' -f 2 \
             | cut -d ']' -f 1)
           echo "image-digest=$image_digest" >> "$GITHUB_OUTPUT"
