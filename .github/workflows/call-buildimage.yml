@@ -12,98 +12,13 @@ on:
 
 jobs:
   build-publish-image:
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: ${{ secrets.REGISTRY_URL }}/eu-eidas-proxy
-      DOCKLE_HOST: "unix:///var/run/docker.sock"
-    outputs:
-      image-tag: ${{ steps.set-image-tag.outputs.image-tag }}
-      image-digest: ${{ steps.set-image-digest.outputs.image-digest }}
-    steps:
-      - name: Set imagetag as env variable
-        id: set-image-tag
-        run: |
-          image_tag=$(date +'%Y-%m-%d-%H%M')-${GITHUB_SHA::8}
-          echo "image-tag=$image_tag" >> "$GITHUB_OUTPUT"
-          echo "- Image tag: $image_tag" >> "$GITHUB_STEP_SUMMARY"
-
-      - uses: actions/checkout@v4
-
-      - name: Build the tagged Docker image
-        run: docker build --tag ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}} --file docker/Dockerfile --build-arg GIT_PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}} .
-      - name: Set trivyignore env if file exists
-        id: set-trivyignore-path
-        run: |
-          if [ -f "./.trivyignore" ]; then
-            trivyignore_path=./.trivyignore
-            echo "trivyignore-path=$trivyignore_path" >> "$GITHUB_OUTPUT"
-            echo "- Trivy ignore path: $trivyignore_path" >> "$GITHUB_STEP_SUMMARY"
-          fi
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@d710430a6722f083d3b36b8339ff66b32f22ee55 # pin@v0.19.0
-        with:
-          image-ref: ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}
-          exit-code: "1"
-          severity: "CRITICAL,HIGH"
-          trivyignores: ${{ steps.set-trivyignore-path.outputs.trivyignore-path }}
-      - name: Create SBOM artifact name
-        id: sbom-name
-        run: |
-          SBOM_NAME=$(echo ${{ env.IMAGE_NAME }} | tr '/' '-')
-          echo "sbom-artifact-id=$SBOM_NAME" >> "$GITHUB_OUTPUT"
-          echo "- SBOM: $SBOM_NAME" >> "$GITHUB_STEP_SUMMARY"
-      - name: Run Trivy SBOM generation
-        uses: aquasecurity/trivy-action@d710430a6722f083d3b36b8339ff66b32f22ee55 # pin@v0.19.0
-        with:
-          scan-type: image
-          format: github
-          image-ref: "${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}}"
-          output: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ steps.set-image-tag.outputs.image-tag }}.json"
-          github-pat: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload trivy report as a Github artifact
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # pin@v4.3.3
-        with:
-          name: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ steps.set-image-tag.outputs.image-tag }}"
-          path: "${{ github.workspace }}/sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ steps.set-image-tag.outputs.image-tag }}.json"
-
-      - name: "Login to Azure Container registery"
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_URL }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-      - run: docker push ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}
-
-      - run: echo "IMAGE_DIGEST=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}}|cut -d '@' -f 2|cut -d ']' -f 1)" >> "$GITHUB_ENV"
-      - name: Set image digest
-        id: set-image-digest
-        run: |
-          image_digest=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{steps.set-image-tag.outputs.image-tag}} \
-            | cut -d '@' -f 2 \
-            | cut -d ']' -f 1)
-          echo "image-digest=$image_digest" >> "$GITHUB_OUTPUT"
-          echo "- Image digest: $image_digest" >> "$GITHUB_STEP_SUMMARY"
-
-  check-for-cve-suppression-changes:
-    needs: [build-publish-image]
-    uses: felleslosninger/github-workflows/.github/workflows/ci-check-for-cve-suppression-changes.yml@21c4f5ec8cd3208be9f4dfa59b0eae31667535ae # pin@v0.1.0
+    uses: felleslosninger/github-workflows/.github/workflows/ci-build-publish-image.yml@add-sbom-generation-to-docker-build
+    with:
+      image-name: eu-eidas-proxy
+      application-type: docker
+      build-arg: GIT_PACKAGE_TOKEN=${{ secrets.GITHUB_TOKEN }}
     secrets: inherit
 
-  notify-on-errors:
-    runs-on: ubuntu-latest
-    needs: [build-publish-image]
-    if: always() && contains(needs.*.result, 'failure')
-    strategy:
-      matrix:
-        slack-channel: ["C05G4B8R2GG"]
-    steps:
-      - name: Send Slack notification
-        uses: felleslosninger/github-actions/send-slack-notification@64581edd1acd1930db337b64e896036c1aa05736 # pin@v0.7.3
-        with:
-          slack-channel-id: ${{ matrix.slack-channel }}
-          slack-bot-token: ${{ secrets.SLACK_CICD_NOTIFICATION_TOKEN }}
-          failed: "true"
   call-update-image:
     uses: felleslosninger/github-workflows/.github/workflows/ci-call-update-image.yml@main
     needs: [build-publish-image]
@@ -112,7 +27,7 @@ jobs:
       deployment-environment: systest
       image-digest: ${{ needs.build-publish-image.outputs.image-digest }}
       image-name: eu-eidas-proxy
-      image-version: ${{ needs.build-publish-image.outputs.image-tag }}
+      image-version: ${{ needs.build-publish-image.outputs.image-version }}
       kubernetes-repo: idporten-cd
       product-name: eidas
     secrets: inherit
