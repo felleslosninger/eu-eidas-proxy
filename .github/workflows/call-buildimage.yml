@@ -16,7 +16,7 @@ jobs:
     with:
       image-name: eu-eidas-proxy
       application-type: docker
-      build-add-git-package-token: true
+      add-git-package-token: true
     secrets: inherit
 
   call-update-image:
