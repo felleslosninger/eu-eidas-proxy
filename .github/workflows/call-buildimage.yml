@@ -11,7 +11,7 @@ on:
       - 'LICENSE'
 
 jobs:
-  build-image:
+  build-publish-image:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: ${{ secrets.REGISTRY_URL }}/eu-eidas-proxy
@@ -27,18 +27,41 @@ jobs:
 
       - name: Build the tagged Docker image
         run: docker build --tag ${{env.IMAGE_NAME}}:${{env.IMAGETAG}} --file docker/Dockerfile --build-arg GIT_PACKAGE_TOKEN=${{secrets.GITHUB_TOKEN}} .
-
+      - name: Set trivyignore env if file exists
+        id: set-trivyignore-path
+        run: |
+          if [ -f "./.trivyignore" ]; then
+            trivyignore_path=./.trivyignore
+            echo "trivyignore-path=$trivyignore_path" >> "$GITHUB_OUTPUT"
+            echo "- Trivy ignore path: $trivyignore_path" >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@d710430a6722f083d3b36b8339ff66b32f22ee55 # pin@v0.19.0
         with:
           image-ref: ${{env.IMAGE_NAME}}:${{env.IMAGETAG}}
           exit-code: "1"
           severity: "CRITICAL,HIGH"
-
-      - uses: anchore/sbom-action@v0
+          trivyignores: ${{ steps.set-trivyignore-path.outputs.trivyignore-path }}
+      - name: Create SBOM artifact name
+        id: sbom-name
+        run: |
+          SBOM_NAME=$(echo ${{ env.IMAGE_NAME }} | tr '/' '-')
+          echo "sbom-artifact-id=$SBOM_NAME" >> "$GITHUB_OUTPUT"
+          echo "- SBOM: $SBOM_NAME" >> "$GITHUB_STEP_SUMMARY"
+      - name: Run Trivy SBOM generation
+        uses: aquasecurity/trivy-action@d710430a6722f083d3b36b8339ff66b32f22ee55 # pin@v0.19.0
         with:
-          image: ${{env.IMAGE_NAME}}:${{env.IMAGETAG}}
-          artifact-name: sbom-${{ github.event.repository.name }}-${{env.IMAGETAG}}.spdx
+          scan-type: image
+          format: github
+          image-ref: "${{env.IMAGE_NAME}}:${{env.IMAGETAG}}}"
+          output: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ env.IMAGETAG }}.json"
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload trivy report as a Github artifact
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # pin@v4.3.3
+        with:
+          name: "sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ env.IMAGETAG }}"
+          path: "${{ github.workspace }}/sbom-${{ steps.sbom-name.outputs.sbom-artifact-id }}-${{ env.IMAGETAG }}.json"
 
       - name: "Login to Azure Container registery"
         uses: azure/docker-login@v1
@@ -46,50 +69,37 @@ jobs:
           login-server: ${{ secrets.REGISTRY_URL }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-
       - run: docker push ${{env.IMAGE_NAME}}:${{env.IMAGETAG}}
 
       - run: echo "IMAGE_DIGEST=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{env.IMAGETAG}}|cut -d '@' -f 2|cut -d ']' -f 1)" >> "$GITHUB_ENV"
-
-      - name: Find jira-id
-        id: regex-find-jira-id
-        env:
-          GIT_MSG: ${{ github.event.head_commit.message }}
+      - name: Set image digest
+        id: set-image-digest
         run: |
-          JIID=$(echo "$GIT_MSG" | head -1 | 
-          sed -E 's/^([a-zA-Z]{2,6}\-[0-9]+).+/\1/')
-          echo "JIRAID=$JIID" >> "$GITHUB_OUTPUT"
+          image_digest=$(docker inspect --format='{{.RepoDigests}}' ${{env.IMAGE_NAME}}:${{env.IMAGETAG}} \
+            | cut -d '@' -f 2 \
+            | cut -d ']' -f 1)
+          echo "image-digest=$image_digest" >> "$GITHUB_OUTPUT"
+          echo "- Image digest: $image_digest" >> "$GITHUB_STEP_SUMMARY"
 
-      - id: output-jira-id
-        if: ${{ steps.regex-find-jira-id.outputs.JIRAID != '' }}
-        run: echo "JIRA_ID=${{ steps.regex-find-jira-id.outputs.JIRAID }}" >> "$GITHUB_ENV"
+  check-for-cve-suppression-changes:
+    needs: [build-publish-image]
+    uses: felleslosninger/github-workflows/.github/workflows/ci-check-for-cve-suppression-changes.yml@21c4f5ec8cd3208be9f4dfa59b0eae31667535ae # pin@v0.1.0
+    secrets: inherit
 
-      - uses: octokit/request-action@v2.x
-        id: get_labels
+  notify-on-errors:
+    runs-on: ubuntu-latest
+    needs: [build-publish-image]
+    if: always() && contains(needs.*.result, 'failure')
+    strategy:
+      matrix:
+        slack-channel: ["C05G4B8R2GG"]
+    steps:
+      - name: Send Slack notification
+        uses: felleslosninger/github-actions/send-slack-notification@64581edd1acd1930db337b64e896036c1aa05736 # pin@v0.7.3
         with:
-          route: GET /repos/${{ github.repository }}/commits/${{ github.sha }}/pulls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: |
-          echo "PR_LABELS=${{ join(fromJSON(steps.get_labels.outputs.data)[0].labels.*.name) }}" >> "$GITHUB_ENV"
-          echo "PR_NUMBER=${{ fromJson(steps.get_labels.outputs.data)[0].number }}" >> "$GITHUB_ENV"
-
-      - id: check_dependabot
-        run: echo "DEPENDABOT=${{ contains(env.PR_LABELS, 'dependencies') }}" >> "$GITHUB_ENV"
-
-      - id: output-dependabot
-        if: ${{ steps.regex-find-jira-id.outputs.match == '' && env.DEPENDABOT == 'true' }}
-        run: echo "JIRA_ID=Dependabot" >> "$GITHUB_ENV"
-
-      - name: Set Outputs
-        id: set-outputs
-        run: |
-          {
-            echo "image-version=${{ env.IMAGETAG }}"
-            echo "image-digest=${{ env.IMAGE_DIGEST }}"
-          } >> "$GITHUB_OUTPUT"
-
+          slack-channel-id: ${{ matrix.slack-channel }}
+          slack-bot-token: ${{ secrets.SLACK_CICD_NOTIFICATION_TOKEN }}
+          failed: "true"
   call-update-image:
     uses: felleslosninger/github-workflows/.github/workflows/ci-call-update-image.yml@main
     needs: build-image
