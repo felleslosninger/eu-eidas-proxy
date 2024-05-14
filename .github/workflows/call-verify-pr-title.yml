@@ -12,9 +12,6 @@ jobs:
   validate-title:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
-
       - name: Validate Pull Request Title
         id: validate-title
         uses: felleslosninger/validate-pull-request-title@v1
