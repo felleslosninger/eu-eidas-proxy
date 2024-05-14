@@ -16,7 +16,7 @@ jobs:
     with:
       image-name: eu-eidas-proxy
       application-type: docker
-      build-arg: GIT_PACKAGE_TOKEN=${{ secrets.GITHUB_TOKEN }}
+      build-add-git-package-token: true
     secrets: inherit
 
   call-update-image:
