@@ -106,13 +106,13 @@ jobs:
           failed: "true"
   call-update-image:
     uses: felleslosninger/github-workflows/.github/workflows/ci-call-update-image.yml@main
-    needs: build-image
+    needs: [build-publish-image]
     with:
       application-name: eu-eidas-proxy
       deployment-environment: systest
-      image-digest: ${{ needs.build-image.outputs.image-digest }}
+      image-digest: ${{ needs.build-publish-image.outputs.image-digest }}
       image-name: eu-eidas-proxy
-      image-version: ${{ needs.build-image.outputs.image-version }}
+      image-version: ${{ needs.build-publish-image.outputs.image-tag }}
       kubernetes-repo: idporten-cd
       product-name: eidas
     secrets: inherit
