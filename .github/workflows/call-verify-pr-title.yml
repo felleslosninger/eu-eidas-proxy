@@ -18,5 +18,4 @@ jobs:
         with:
           pull-request-title: ${{ github.event.pull_request.title }}
           pull-request-allowed-prefixes: "Bump,ID-,MIN-,MP-,KRR-,PF-,AOS-,SP-,EIN-"
-      - name: Print validation result
-        run: echo "Is title valid? ${{ steps.validate-title.outputs.is-valid }}"
+
