@@ -1,7 +1,7 @@
 # Verifies PR title
 
 
-name: PR Checks
+name: PR Title Validation
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Validate Pull Request Title
         id: validate-title
-        uses: felleslosninger/validate-pull-request-title@v1
+        uses: felleslosninger/github-actions/validate-pull-request-title@v1
         with:
           pull-request-title: ${{ github.event.pull_request.title }}
           allowed-prefixes: "Bump,ID-,MIN-,MP-,KRR-,PF-,AOS-,SP-,EIN-"
