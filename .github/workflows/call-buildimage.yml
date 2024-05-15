@@ -14,7 +14,7 @@ jobs:
   build-publish-image:
     uses: felleslosninger/github-workflows/.github/workflows/ci-build-publish-image.yml@main
     with:
-      image-name: eu-eidas-proxy
+      image-name: eidas-proxy
       application-type: docker
       add-git-package-token: true
     secrets: inherit
@@ -23,10 +23,10 @@ jobs:
     uses: felleslosninger/github-workflows/.github/workflows/ci-call-update-image.yml@main
     needs: [build-publish-image]
     with:
-      application-name: eu-eidas-proxy
+      application-name: eidas-proxy
       deployment-environment: systest
       image-digest: ${{ needs.build-publish-image.outputs.image-digest }}
-      image-name: eu-eidas-proxy
+      image-name: eidas-proxy
       image-version: ${{ needs.build-publish-image.outputs.image-version }}
       kubernetes-repo: idporten-cd
       product-name: eidas
