@@ -26,10 +26,10 @@ RUN mkdir -p eidas-proxy-config/
 COPY docker/proxy/config/ eidas-proxy-config
 
 # Replace base URLs in eidas.xml and metadata (whitelist).
-RUN sed -i 's/EU-PROXY-URL/http:\/\/eu-eidas-proxy:8082/g' eidas-proxy-config/eidas.xml
-RUN sed -i 's/EIDAS-PROXY-URL/http:\/\/eidas-proxy:8077/g' eidas-proxy-config/eidas.xml
+RUN sed -i 's/EIDAS-PROXY-URL/http:\/\/eidas-proxy:8082/g' eidas-proxy-config/eidas.xml
+RUN sed -i 's/IDPORTEN-PROXY-URL/http:\/\/idporten-proxy:8077/g' eidas-proxy-config/eidas.xml
 RUN sed -i 's/DEMOLAND-CA-URL/http:\/\/eidas-demo-ca:8080/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
-RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/http:\/\/eu-eidas-connector:8083/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
+RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/http:\/\/eidas-connector:8083/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
 
 # Only for local development
 RUN sed -i 's/metadata.restrict.http">true/metadata.restrict.http">false/g' eidas-proxy-config/eidas.xml

@@ -17,7 +17,7 @@ services:
       - eidas
     command: redis-server --maxmemory-policy allkeys-lru
 
-  eu-eidas-proxy:
+  eidas-proxy:
     build:
       context: .
       dockerfile: docker/dev.Dockerfile
@@ -33,7 +33,7 @@ services:
     ports:
       - "8082:8082"
     healthcheck:
-      test: wget --no-verbose --tries=1 http://eu-eidas-proxy:8082/ServiceMetadata || exit 1
+      test: wget --no-verbose --tries=1 http://eidas-proxy:8082/ServiceMetadata || exit 1
       interval: 5s
       start_period: 8s
       timeout: 5s
