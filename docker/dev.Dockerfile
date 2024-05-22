@@ -50,13 +50,14 @@ RUN sed -i 's/metadata.restrict.http">true/metadata.restrict.http">false/g' eida
 FROM tomcat:9.0-jre11-temurin-jammy
 
 #Fjerner passord fra logger ved oppstart
-#RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
+RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
 # Fjerner default applikasjoner fra tomcat
 RUN rm -rf /usr/local/tomcat/webapps.dist
 
 COPY docker/bouncycastle/java_bc.security /opt/java/openjdk/conf/security/java_bc.security
 COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1.78.jar
 
+COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 # change tomcat port
 RUN sed -i 's/port="8080"/port="8082"/' ${CATALINA_HOME}/conf/server.xml
 

@@ -47,7 +47,7 @@ RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/https:\/\/eidas-connector.idporten.dev/g
 FROM tomcat:9.0-jre11-temurin-jammy
 
 #Fjerner passord fra logger ved oppstart
-#RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
+RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
 # Fjerner default applikasjoner fra tomcat
 RUN rm -rf /usr/local/tomcat/webapps.dist
 
@@ -55,6 +55,7 @@ COPY docker/bouncycastle/java_bc.security /opt/java/openjdk/conf/security/java_b
 COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1.78.jar
 
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
+COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 
 RUN mkdir -p /etc/config/ && chmod 770 /etc/config/
 COPY --from=builder /data/eidas-proxy-config/ /etc/config
