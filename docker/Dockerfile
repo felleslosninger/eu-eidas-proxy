@@ -38,10 +38,10 @@ RUN mkdir -p eidas-proxy-config/
 COPY docker/proxy/config/ eidas-proxy-config
 
 # Replace base URLs in eidas.xml and metadata (whitelist). TODO: move to environment specific k8 config
-RUN sed -i 's/EIDAS-PROXY-URL/https:\/\/eidas-proxy.idporten.dev/g' eidas-proxy-config/eidas.xml
-RUN sed -i 's/IDPORTEN-PROXY-URL/https:\/\/idporten-proxy.idporten.dev/g' eidas-proxy-config/eidas.xml
-RUN sed -i 's/DEMOLAND-CA-URL/https:\/\/eidas-demo-ca.idporten.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
-RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/https:\/\/eidas-connector.idporten.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
+RUN sed -i 's/EIDAS-PROXY-URL/https:\/\/proxy.eidasnode.dev/g' eidas-proxy-config/eidas.xml
+RUN sed -i 's/IDPORTEN-PROXY-URL/https:\/\/idporten-proxy.eidasnode.dev/g' eidas-proxy-config/eidas.xml
+RUN sed -i 's/DEMOLAND-CA-URL/https:\/\/eidas-demo-ca.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
+RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/https:\/\/connector.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
 
 
 FROM tomcat:9.0-jre11-temurin-jammy
