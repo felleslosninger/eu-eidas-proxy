@@ -15,7 +15,7 @@
         </encoder>
     </appender>
 
-    <logger name="eu.eidas.node" level="DEBUG" additivity="false">
+    <logger name="eu.eidas.node" level="INFO" additivity="false">
         <appender-ref ref="APPLICATION"/>
     </logger>
     <logger name="no.idporten" level="INFO" additivity="false">
