@@ -12,3 +12,5 @@ CVE-2024-22262 #spring-web fixed in 5.3.34, 6.0.19, 6.1.6
 CVE-2021-37136 # io.netty:netty-codec fixed in 4.1.68.FINAL
 CVE-2021-37137 # io.netty:netty-codec fixed in 4.1.68.FINAL
 CVE-2020-11612 # netty-handler fixed in 4.1.46
+CVE-2022-42003 # jackson-databind fixed in 2.12.7.1, 2.13.4.2
+CVE-2022-42004 # jackson-databind fixed in 2.12.7.1, 2.13.4
