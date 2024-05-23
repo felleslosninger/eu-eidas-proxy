@@ -26,19 +26,19 @@
 	<entry key="metadata.signature.algorithm">http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1</entry>
 
     <!-- Configuration for response assertion signature with RSA -->
-	<entry key="keyStorePath">./keystore/eidasKeyStore.p12</entry>
-	<entry key="keyStorePassword">local-demo</entry>
-	<entry key="keyPassword">local-demo</entry>
-	<entry key="issuer">CN=local-demo-cert, OU=DIGIT, O=European Commission, L=Brussels, ST=Belgium, C=BE</entry>
-	<entry key="serialNumber">6C4536E0B25A05E8214A46C9086521977045417E</entry>
+	<entry key="keyStorePath">./keystore/norwegianEidasKeyStore.p12</entry>
+	<entry key="keyStorePassword">changeit</entry>
+	<entry key="keyPassword">changeit</entry>
+	<entry key="issuer">CN=norwegian-eidasnode-proxy,OU=ID-porten,O=Digitaliseringsdirektoratet,L=Leikanger,ST=Sogndal,C=NO</entry>
+	<entry key="serialNumber">475755E7EA83E6201AF6F1064302018FA4B7AED5</entry>
 	<entry key="keyStoreType">PKCS12</entry>
 	<entry key="keyStorePurpose">TRUSTSTORE</entry>
 
-	<entry key="metadata.keyStorePath">./keystore/eidasKeyStore_METADATA.p12</entry>
-	<entry key="metadata.keyStorePassword">local-demo</entry>
-	<entry key="metadata.keyPassword">local-demo</entry>
-	<entry key="metadata.issuer">CN=metadata, OU=DIGIT, O=EC, L=Brussels, ST=EU, C=BE</entry>
-	<entry key="metadata.serialNumber">6A4EE55F16AD32E275DE78C77DADC73C8C817126</entry>
+	<entry key="metadata.keyStorePath">./keystore/norwegianEidasKeyStore_METADATA.p12</entry>
+	<entry key="metadata.keyStorePassword">changeit</entry>
+	<entry key="metadata.keyPassword">changeit</entry>
+	<entry key="metadata.issuer">CN=norwegian-eidas-proxy-metadata,OU=ID-porten,O=Digitaliseringsdirektoratet,L=Leikanger,ST=Sogndal,C=NO</entry>
+	<entry key="metadata.serialNumber">7D24276D01506E2997AA5597734F018FA49F87A1</entry>
 	<entry key="metadata.keyStoreType">PKCS12</entry>
 
 	<!--configuration for using the metadata keystore with a trust chain-->

@@ -18,15 +18,5 @@
 <properties>
 	<entry key="EncryptTo.CA">true</entry>
 
-	<entry key="EncryptTo.CB">true</entry>
-
-	<entry key="EncryptTo.CC">true</entry>
-
-	<entry key="EncryptTo.CD">true</entry>
-
-	<entry key="EncryptTo.CF">true</entry>
-
-	<entry key="EncryptTo.BE">true</entry>
-
-	<entry key="EncryptTo.NO">true</entry> <!-- TODO: alter this config-->
+	<entry key="EncryptTo.NO">true</entry>
 </properties>

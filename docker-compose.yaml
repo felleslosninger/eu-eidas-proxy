@@ -25,7 +25,7 @@ services:
         GIT_PACKAGE_TOKEN: ${GIT_PACKAGE_TOKEN}
         GIT_PACKAGE_USERNAME: ${GIT_PACKAGE_USERNAME}
     environment:
-      - ENVIRONMENT=systest
+      - ENVIRONMENT=docker
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - LIGHT_TOKEN_PROXYSERVICE_REQUEST_SECRET=mySecretProxyserviceRequest
