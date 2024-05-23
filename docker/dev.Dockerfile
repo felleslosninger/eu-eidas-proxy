@@ -47,7 +47,7 @@ RUN sed -i 's/NO-EIDAS-CONNECTOR-URL/http:\/\/eidas-connector:8083/g' eidas-prox
 RUN sed -i 's/metadata.restrict.http">true/metadata.restrict.http">false/g' eidas-proxy-config/eidas.xml
 
 
-FROM tomcat:9.0-jre11-temurin-jammy
+FROM tomcat:10.1-jre11-temurin-jammy
 
 #Fjerner passord fra logger ved oppstart
 RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties

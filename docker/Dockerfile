@@ -44,7 +44,7 @@ RUN sed -i 's/DEMOLAND-CA-URL/https:\/\/eidas-demo-ca.eidasnode.dev/g' eidas-pro
 RUN sed -i 's/NO-EIDAS-CONNECTOR-URL/https:\/\/connector.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
 
 
-FROM tomcat:9.0-jre11-temurin-jammy
+FROM tomcat:10.1-jre11-temurin-jammy
 
 #Fjerner passord fra logger ved oppstart
 RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
