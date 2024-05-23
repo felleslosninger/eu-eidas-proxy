@@ -41,7 +41,7 @@ COPY docker/proxy/config/ eidas-proxy-config
 RUN sed -i 's/EIDAS-PROXY-URL/https:\/\/proxy.eidasnode.dev/g' eidas-proxy-config/eidas.xml
 RUN sed -i 's/IDPORTEN-PROXY-URL/https:\/\/idporten-proxy.eidasnode.dev/g' eidas-proxy-config/eidas.xml
 RUN sed -i 's/DEMOLAND-CA-URL/https:\/\/eidas-demo-ca.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
-RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/https:\/\/connector.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
+RUN sed -i 's/NO-EIDAS-CONNECTOR-URL/https:\/\/connector.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
 
 
 FROM tomcat:9.0-jre11-temurin-jammy

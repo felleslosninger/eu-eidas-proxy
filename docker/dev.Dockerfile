@@ -41,7 +41,7 @@ COPY docker/proxy/config/ eidas-proxy-config
 RUN sed -i 's/EIDAS-PROXY-URL/http:\/\/eidas-proxy:8082/g' eidas-proxy-config/eidas.xml
 RUN sed -i 's/IDPORTEN-PROXY-URL/http:\/\/idporten-proxy:8077/g' eidas-proxy-config/eidas.xml
 RUN sed -i 's/DEMOLAND-CA-URL/http:\/\/eidas-demo-ca:8080/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
-RUN sed -i 's/NO-EU-EIDAS-CONNECTOR-URL/http:\/\/eidas-connector:8083/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
+RUN sed -i 's/NO-EIDAS-CONNECTOR-URL/http:\/\/eidas-connector:8083/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
 
 # Only for local development
 RUN sed -i 's/metadata.restrict.http">true/metadata.restrict.http">false/g' eidas-proxy-config/eidas.xml

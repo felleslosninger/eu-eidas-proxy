@@ -29,16 +29,16 @@
 	<entry key="keyStorePath">./keystore/norwegianEidasKeyStore.p12</entry>
 	<entry key="keyStorePassword">changeit</entry>
 	<entry key="keyPassword">changeit</entry>
-	<entry key="issuer">CN=Norwegian eIDAS node proxy,OU=ID-porten,O=Digdir,L=Leikanger,ST=Sogndal,C=NO</entry>
-	<entry key="serialNumber">5B7B16C65105A67F51E58ED5C885018F9F403E83</entry>
+	<entry key="issuer">CN=norwegian-eidasnode-proxy,OU=ID-porten,O=Digitaliseringsdirektoratet,L=Leikanger,ST=Sogndal,C=NO</entry>
+	<entry key="serialNumber">475755E7EA83E6201AF6F1064302018FA4B7AED5</entry>
 	<entry key="keyStoreType">PKCS12</entry>
 	<entry key="keyStorePurpose">TRUSTSTORE</entry>
 
 	<entry key="metadata.keyStorePath">./keystore/norwegianEidasKeyStore_METADATA.p12</entry>
 	<entry key="metadata.keyStorePassword">changeit</entry>
 	<entry key="metadata.keyPassword">changeit</entry>
-	<entry key="metadata.issuer">CN=norwegian eIDAS node proxy metadata,OU=ID-porten,O=Digitaliseringsdirektoratet,L=Leikanger,ST=Sogndal,C=NO</entry>
-	<entry key="metadata.serialNumber">7036D761A28C77845159A1B8CFA6018F9F5CE7F9</entry>
+	<entry key="metadata.issuer">CN=norwegian-eidas-proxy-metadata,OU=ID-porten,O=Digitaliseringsdirektoratet,L=Leikanger,ST=Sogndal,C=NO</entry>
+	<entry key="metadata.serialNumber">7D24276D01506E2997AA5597734F018FA49F87A1</entry>
 	<entry key="metadata.keyStoreType">PKCS12</entry>
 
 	<!--configuration for using the metadata keystore with a trust chain-->
