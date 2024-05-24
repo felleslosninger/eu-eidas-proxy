@@ -20,5 +20,10 @@ Start docker containers:
 docker-compose up --build 
 ```
 
+Test by checking if metadata-endepoint is responding: eidas-proxy:8082/ServiceMetadata
+```
+
 ### Run eidas-proxy in test/production environment
-Systest: eidas-proxy.idporten.dev , but will be moved to proxy.eidasnode.dev soon.
+Systest: proxy.eidasnode.dev/ServiceMetadata
+Test: proxy.test.eidasnode.no/ServiceMetadata
+Prod: proxy.eidasnode.no/ServiceMetadata

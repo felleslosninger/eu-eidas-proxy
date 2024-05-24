@@ -25,11 +25,12 @@ services:
         GIT_PACKAGE_TOKEN: ${GIT_PACKAGE_TOKEN}
         GIT_PACKAGE_USERNAME: ${GIT_PACKAGE_USERNAME}
     environment:
+      - ENVIRONMENT=docker
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - LIGHT_TOKEN_PROXYSERVICE_REQUEST_SECRET=mySecretProxyserviceRequest
       - LIGHT_TOKEN_PROXYSERVICE_RESPONSE_SECRET=mySecretProxyserviceResponse
-      - CATALINA_OPTS=-Xms512m -Xmx1024m -DredisPassword=$${REDIS_PASSWORD} -DredisPort=$${REDIS_PORT} -DredisHost=$${REDIS_HOST} -DlightTokenProxyserviceRequestSecret=$${LIGHT_TOKEN_PROXYSERVICE_REQUEST_SECRET} -DlightTokenProxyserviceResponseSecret=$${LIGHT_TOKEN_PROXYSERVICE_RESPONSE_SECRET}
+      - CATALINA_OPTS=-Xms512m -Xmx1024m -DappEnvironment=$${ENVIRONMENT} -DredisPassword=$${REDIS_PASSWORD} -DredisPort=$${REDIS_PORT} -DredisHost=$${REDIS_HOST} -DlightTokenProxyserviceRequestSecret=$${LIGHT_TOKEN_PROXYSERVICE_REQUEST_SECRET} -DlightTokenProxyserviceResponseSecret=$${LIGHT_TOKEN_PROXYSERVICE_RESPONSE_SECRET}
     ports:
       - "8082:8082"
     healthcheck:
