@@ -47,7 +47,7 @@ COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 
-RUN mkdir -p /etc/config && chmod 770 /etc/config
+RUN mkdir -p /etc/config && chmod 776 /etc/config
 COPY docker/proxy/config /etc/config/eidas-proxy
 COPY docker/proxy/profiles /etc/config/profiles
 RUN chmod -R 770 /etc/config/profiles
