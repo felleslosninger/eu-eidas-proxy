@@ -34,16 +34,6 @@ COPY docker/proxy/logback.xml eidasnode-pub/EIDAS-Node-Proxy/src/main/resources/
 # Build eidas proxy service
 RUN cd eidasnode-pub && mvn clean install --file EIDAS-Parent/pom.xml -P NodeOnly -P-specificCommunicationJcacheIgnite -DskipTests
 
-RUN mkdir -p eidas-proxy-config/
-COPY docker/proxy/config/ eidas-proxy-config
-
-# Replace base URLs in eidas.xml and metadata (whitelist). TODO: move to environment specific k8 config
-RUN sed -i 's/EIDAS-PROXY-URL/https:\/\/proxy.eidasnode.dev/g' eidas-proxy-config/eidas.xml
-RUN sed -i 's/IDPORTEN-PROXY-URL/https:\/\/idporten-proxy.eidasnode.dev/g' eidas-proxy-config/eidas.xml
-RUN sed -i 's/DEMOLAND-CA-URL/https:\/\/eidas-demo-ca.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
-RUN sed -i 's/NO-EIDAS-CONNECTOR-URL/https:\/\/connector.eidasnode.dev/g' eidas-proxy-config/metadata/MetadataFetcher_Service.properties
-
-
 FROM tomcat:9.0-jre11-temurin-jammy
 
 #Fjerner passord fra logger ved oppstart
@@ -57,8 +47,12 @@ COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 
-RUN mkdir -p /etc/config/ && chmod 770 /etc/config/
-COPY --from=builder /data/eidas-proxy-config/ /etc/config
+RUN mkdir -p /etc/config && chmod 770 /etc/config
+COPY docker/proxy/config /etc/config/eidas-proxy
+COPY docker/proxy/profiles /etc/config/profiles
+
+COPY docker/overrideProperties.sh ${CATALINA_HOME}/bin/overrideProperties.sh
+RUN chmod 755 ${CATALINA_HOME}/bin/overrideProperties.sh
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
@@ -71,4 +65,4 @@ RUN mkdir -p ${CATALINA_HOME}/eidas/logs && chmod 774 ${CATALINA_HOME}/eidas/log
 
 EXPOSE 8080
 
-CMD ["/bin/bash", "-c", "catalina.sh run"]
+CMD ["/bin/bash", "-c", "/overrideProperties.sh;catalina.sh run"]

@@ -45,6 +45,7 @@ services:
     command:
       - |
         cd /usr/local/tomcat
+        ./bin/overrideProperties.sh
         ./bin/catalina.sh run
 
 
