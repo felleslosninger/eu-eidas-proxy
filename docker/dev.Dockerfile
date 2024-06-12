@@ -50,11 +50,12 @@ RUN sed -i 's/port="8080"/port="8082"/' ${CATALINA_HOME}/conf/server.xml
 
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 
-RUN mkdir -p /etc/config/eidas-proxy && chmod 770 /etc/config/
-COPY docker/proxy/config/ /etc/config/eidas-proxy
-COPY docker/proxy/profiles /etc/config
+RUN mkdir -p /etc/config && chmod 770 /etc/config
+COPY docker/proxy/config /etc/config/eidas-proxy
+COPY docker/proxy/profiles /etc/config/profiles
 
-COPY ./overrideProperties.sh /overrideProperties.sh
+COPY docker/overrideProperties.sh ${CATALINA_HOME}/bin/overrideProperties.sh
+RUN chmod 755 ${CATALINA_HOME}/bin/overrideProperties.sh
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war

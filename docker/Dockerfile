@@ -47,11 +47,11 @@ COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 
-RUN mkdir -p /etc/config/eidas-proxy && chmod 770 /etc/config/
-COPY docker/proxy/config/ /etc/config/eidas-proxy
+RUN mkdir -p /etc/config && chmod 770 /etc/config
+COPY docker/proxy/config /etc/config/eidas-proxy
 COPY docker/proxy/profiles /etc/config
 
-COPY ./overrideProperties.sh /overrideProperties.sh
+COPY docker/overrideProperties.sh ${CATALINA_HOME}/bin/overrideProperties.sh
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war

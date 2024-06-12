@@ -3,7 +3,7 @@
 
 # copy eidas.xml
 ENV_SOURCE=/etc/config/profiles/${ENVIRONMENT}/
-DEFAULT_CONFIG=/etc/config/
+DEFAULT_CONFIG=/etc/config/eidas-proxy/
 if [ -d "$ENV_SOURCE" ]; then
     echo "Copy files for environment ${ENVIRONMENT} from $ENV_SOURCE" && ls -lt "$ENV_SOURCE"
     cp -r "$ENV_SOURCE"** "$DEFAULT_CONFIG"

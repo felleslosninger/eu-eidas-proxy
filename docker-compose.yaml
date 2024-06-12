@@ -44,8 +44,8 @@ services:
     entrypoint: "/bin/bash -c"
     command:
       - |
-        ./overrideProperties.sh
         cd /usr/local/tomcat
+        ./bin/overrideProperties.sh
         ./bin/catalina.sh run
 
 
