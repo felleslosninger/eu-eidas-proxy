@@ -65,4 +65,4 @@ RUN mkdir -p ${CATALINA_HOME}/eidas/logs && chmod 774 ${CATALINA_HOME}/eidas/log
 
 EXPOSE 8080
 
-CMD ["/bin/bash", "-c", "/overrideProperties.sh;catalina.sh run"]
+CMD ["/bin/bash", "-c", "./bin/overrideProperties.sh;catalina.sh run"]
