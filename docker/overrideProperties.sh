@@ -5,6 +5,6 @@
 ENV_SOURCE=/etc/config/profiles/${ENVIRONMENT}/
 DEFAULT_CONFIG=/etc/config/
 if [ -d "$ENV_SOURCE" ]; then
-    echo "Copy files for environment ${ENVIRONMENT}" && ls -lt
+    echo "Copy files for environment ${ENVIRONMENT} from $ENV_SOURCE" && ls -lt "$ENV_SOURCE"
     cp -r "$ENV_SOURCE"** "$DEFAULT_CONFIG"
 fi

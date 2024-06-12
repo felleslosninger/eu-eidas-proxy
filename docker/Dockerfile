@@ -34,10 +34,6 @@ COPY docker/proxy/logback.xml eidasnode-pub/EIDAS-Node-Proxy/src/main/resources/
 # Build eidas proxy service
 RUN cd eidasnode-pub && mvn clean install --file EIDAS-Parent/pom.xml -P NodeOnly -P-specificCommunicationJcacheIgnite -DskipTests
 
-RUN mkdir -p eidas-proxy-config/
-COPY docker/proxy/config/ eidas-proxy-config
-
-
 FROM tomcat:9.0-jre11-temurin-jammy
 
 #Fjerner passord fra logger ved oppstart
@@ -51,8 +47,9 @@ COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 
-RUN mkdir -p /etc/config/ && chmod 770 /etc/config/
-COPY --from=builder /data/eidas-proxy-config/ /etc/config
+RUN mkdir -p /etc/config/eidas-proxy && chmod 770 /etc/config/
+COPY docker/proxy/config/ /etc/config/eidas-proxy
+COPY docker/proxy/profiles /etc/config
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
