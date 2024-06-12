@@ -49,9 +49,10 @@ COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 
 RUN mkdir -p /etc/config && chmod 770 /etc/config
 COPY docker/proxy/config /etc/config/eidas-proxy
-COPY docker/proxy/profiles /etc/config
+COPY docker/proxy/profiles /etc/config/profiles
 
 COPY docker/overrideProperties.sh ${CATALINA_HOME}/bin/overrideProperties.sh
+RUN chmod 755 ${CATALINA_HOME}/bin/overrideProperties.sh
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
