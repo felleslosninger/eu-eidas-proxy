@@ -50,7 +50,7 @@ COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 RUN mkdir -p /etc/config && chmod 770 /etc/config
 COPY docker/proxy/config /etc/config/eidas-proxy
 COPY docker/proxy/profiles /etc/config/profiles
-RUN chmod -R 776 /etc/config/eidas-proxy/
+RUN chmod 776 /etc/config/eidas-proxy
 
 COPY docker/overrideProperties.sh ${CATALINA_HOME}/bin/overrideProperties.sh
 RUN chmod 755 ${CATALINA_HOME}/bin/overrideProperties.sh
