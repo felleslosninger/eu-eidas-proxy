@@ -27,17 +27,10 @@
     <entry key="service.metadata.url">https://proxy.test.eidasnode.no/ServiceMetadata</entry>
 
     <!-- ProxyService contact -->
-    <entry key="service.contact.support.email">servicedesk@digdir.no</entry>
+    <entry key="service.contact.support.email">brukerstotte@digdir.no</entry>
     <entry key="service.contact.support.company">The Norwegian Digitalisation Agency</entry>
-    <entry key="service.contact.support.givenname">NA</entry>
-    <entry key="service.contact.support.surname">NA</entry>
-    <entry key="service.contact.support.phone">+47 95736103</entry> ><!-- Endre? Telefon ved hastesaker til teknisk forvaltning -->
-    <entry key="service.contact.technical.email">servicedesk@digdir.no</entry>
-    <entry key="service.contact.technical.company">The Norwegian Digitalisation Agency</entry>
-    <entry key="service.contact.technical.givenname">NA</entry>
-    <entry key="service.contact.technical.surname">NA</entry>
-    <entry key="service.contact.technical.phone">+47 95736103</entry> <!-- Endre? Telefon ved hastesaker til teknisk forvaltning -->
-    <!-- ProxyService organization -->
+
+   <!-- ProxyService organization -->
     <entry key="service.organization.name">The Norwegian Digitalisation Agency</entry>
     <entry key="service.organization.displayname">The Norwegian Digitalisation Agency</entry>
     <entry key="service.organization.url">https://www.digdir.no/</entry>
@@ -59,4 +52,8 @@
     <entry key="specific.proxyservice.request.receiver">https://idporten-proxy.test.eidasnode.no/ProxyServiceRequest</entry>
 
     <entry key="node.metadata.not.signed.descriptors">https://dummy.no</entry>
+
+    <entry key="eidas.protocol.version">1.3</entry>
+    <entry key="service.LoA">http://eidas.europa.eu/LoA/high</entry>
+
 </properties>
