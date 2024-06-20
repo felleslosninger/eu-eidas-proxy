@@ -48,10 +48,10 @@
             <!-- Specific ExtensionProcessor module -->
             <parameter name="class"
                        value="eu.eidas.auth.engine.core.eidas.EidasProtocolProcessor" />
-            <!--
+
             <parameter name="coreAttributeRegistryFile"
-                       value="saml-engine-eidas-attributes-TEMPLATE.xml" />
-                        -->
+                       value="saml-engine-eidas-attributes.xml" />
+
             <parameter name="additionalAttributeRegistryFile"
                        value="saml-engine-additional-attributes.xml" />
 
