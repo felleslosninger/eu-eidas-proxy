@@ -49,7 +49,7 @@ services:
       - |
         cd /usr/local/tomcat
         ./bin/addEnvironmentSpesificConfigFiles.sh
-        ./bin/addKeyStoreConfig.sh
+        ./bin/updateKeyStoreConfig.sh
         ./bin/catalina.sh run
 
 

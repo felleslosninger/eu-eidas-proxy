@@ -31,8 +31,16 @@ RUN cp /data/logstash-logback-encoder-*.jar /data/jackson-*.jar eidasnode-pub/EI
 COPY docker/proxy/config/proxySpecificCommunicationCaches.xml eidasnode-pub/EIDAS-SpecificCommunicationDefinition/src/main/resources/
 COPY docker/proxy/logback.xml eidasnode-pub/EIDAS-Node-Proxy/src/main/resources/logback.xml
 
+#Add HSM config
+COPY docker/luna/hsm.cfg eidasnode-pub/EIDAS-Node-Proxy/src/main/webapp/WEB-INF/
+
 # Build eidas proxy service
 RUN cd eidasnode-pub && mvn clean install --file EIDAS-Parent/pom.xml -P NodeOnly -P-specificCommunicationJcacheIgnite -DskipTests
+
+#HSM
+COPY docker/luna/Luna_min_client.tar /tmp
+RUN mkdir -p /usr/local/luna
+RUN tar xvf /tmp/Luna_min_client.tar --strip 1 -C /usr/local/luna
 
 FROM tomcat:9.0-jre11-temurin-jammy
 
@@ -44,15 +52,24 @@ RUN rm -rf /usr/local/tomcat/webapps.dist
 COPY docker/bouncycastle/java_bc.security /opt/java/openjdk/conf/security/java_bc.security
 COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1.78.jar
 
+#HSM
+RUN mkdir -p /var/usrlocal/luna
+COPY --from=builder /usr/local/luna /usr/usrlocal/luna
+ENV ChrystokiConfigurationPath=/usr/usrlocal/luna/config
+COPY docker/luna/Chrystoki.conf /usr/usrlocal/luna/config/
+
+#Tomcat changes
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
 
+# eIDAS config
 RUN mkdir -p /etc/config && chmod 770 /etc/config
 COPY docker/proxy/config /etc/config/eidas-proxy
 COPY docker/proxy/profiles /etc/config/profiles
 RUN chmod 776 /etc/config/eidas-proxy
+RUN chmod 766 /etc/config/profiles/docker/SignModule_Service*.xml
 
-COPY docker/overrideProperties.sh docker/updateKeyStoreConfig.sh ${CATALINA_HOME}/bin/
+COPY docker/addEnvironmentSpesificConfigFiles.sh docker/updateKeyStoreConfig.sh ${CATALINA_HOME}/bin/
 RUN chmod 755 ${CATALINA_HOME}/bin/addEnvironmentSpesificConfigFiles.sh && chmod 755 ${CATALINA_HOME}/bin/updateKeyStoreConfig.sh
 
 # Add war files to webapps: /usr/local/tomcat/webapps
@@ -66,4 +83,4 @@ RUN mkdir -p ${CATALINA_HOME}/eidas/logs && chmod 774 ${CATALINA_HOME}/eidas/log
 
 EXPOSE 8080
 
-CMD ["/bin/bash", "-c", "./bin/overrideProperties.sh;./bin/updateKeyStoreConfig.sh;catalina.sh run"]
+CMD ["/bin/bash", "-c", "./bin/addEnvironmentSpesificConfigFiles.sh;./bin/updateKeyStoreConfig.sh;catalina.sh run"]

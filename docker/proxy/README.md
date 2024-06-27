@@ -1,18 +1,20 @@
-# eIDAS-proxy Configuration
+# Norwegian eIDAS-proxy Configuration
 
-Folder `config` contains the configuration files for the eIDAS-proxy.
+## Configuration
+| Directory               | Description                                           |
+|-------------------------|-------------------------------------------------------|
+| `docker/proxy/config`   | eIDAS-proxy common configuration files.               |
+| `docker/proxy/profiles` | eIDAS-proxy environment spesific configuration files. |
+| `docker/luna`           | HMS configuration for test and production.            |
+| `docker/bouncycastle`   | Bouncycastle java configuration files.                |
 
-## URLs
-Placeholders to change:
-* `EIDAS-PROXY-URL` - URL of this application (eidas-proxy) used in eidas.xml
-* `IDPORTEN-PROXY-URL` - URL to idporten-proxy (SpecificProxyService) used in eidas.xml
-* `DEMOLAND-CA-URL` - URL of the CA of the DEMOLAND country whitelisted in metadata/ folder. Also add foreign countries EidasNodeConnector to this list.
-* `NO-EIDAS-CONNECTOR-URL` - URL of Norway NO country whitelisted in metadata/ folder. Also add foreign countries EidasNodeConnector to this list.
 
-NB: might be changed to reflect correct context-paths and api.
+### Keystores
+`docker/proxy/profiles/<ENVIRONMENT>/keystore/otherCountriesEidasKeyStore.p12` contains other countries certificates to trust.
 
-These must be altered in dockerfile or in config outside of K8 container.
+## Integrate a new country
+Add metadata certificate to `docker/proxy/profiles/<ENVIRONMENT>/keystore/otherCountriesEidasKeyStore.p12`.
 
-## Keystores
-TODO: replace with our versions, should use HMS in test/production.
+If encryption of communication add country ISO-code here: `docker/proxy/config/encryptionConf.xml`.
+
 
