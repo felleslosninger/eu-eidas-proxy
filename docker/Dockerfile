@@ -52,8 +52,8 @@ COPY docker/proxy/config /etc/config/eidas-proxy
 COPY docker/proxy/profiles /etc/config/profiles
 RUN chmod 776 /etc/config/eidas-proxy
 
-COPY docker/overrideProperties.sh ${CATALINA_HOME}/bin/overrideProperties.sh
-RUN chmod 755 ${CATALINA_HOME}/bin/overrideProperties.sh
+COPY docker/overrideProperties.sh docker/updateKeyStoreConfig.sh ${CATALINA_HOME}/bin/
+RUN chmod 755 ${CATALINA_HOME}/bin/addEnvironmentSpesificConfigFiles.sh && chmod 755 ${CATALINA_HOME}/bin/updateKeyStoreConfig.sh
 
 # Add war files to webapps: /usr/local/tomcat/webapps
 COPY --from=builder /data/eidasnode-pub/EIDAS-Node-Proxy/target/EidasNodeProxy.war ${CATALINA_HOME}/webapps/ROOT.war
@@ -66,4 +66,4 @@ RUN mkdir -p ${CATALINA_HOME}/eidas/logs && chmod 774 ${CATALINA_HOME}/eidas/log
 
 EXPOSE 8080
 
-CMD ["/bin/bash", "-c", "./bin/overrideProperties.sh;catalina.sh run"]
+CMD ["/bin/bash", "-c", "./bin/overrideProperties.sh;./bin/updateKeyStoreConfig.sh;catalina.sh run"]
