@@ -50,7 +50,7 @@
     <!-- Restrict metadata retrieval to https -->
     <entry key="metadata.restrict.http">false</entry>
     <!--URL for specific-proxyService requests receiver only needed when specific  -->
-    <entry key="specific.proxyservice.request.receiver">http://idporten-proxy:8082/ProxyServiceRequest</entry>
+    <entry key="specific.proxyservice.request.receiver">http://idporten-proxy:8077/ProxyServiceRequest</entry>
 
     <entry key="node.metadata.not.signed.descriptors">https://dummy.no</entry>
 
