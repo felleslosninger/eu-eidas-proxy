@@ -55,8 +55,8 @@ COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1
 #HSM
 RUN mkdir -p /var/usrlocal/luna
 COPY --from=builder /usr/local/luna /usr/usrlocal/luna
+RUN mkdir -p /var/usrlocal/luna/config/certs
 ENV ChrystokiConfigurationPath=/usr/usrlocal/luna/config
-COPY docker/luna/Chrystoki.conf /usr/usrlocal/luna/config/
 
 #Tomcat changes
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
