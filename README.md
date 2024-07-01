@@ -7,6 +7,16 @@ See these documents in https://ec.europa.eu/digital-building-blocks/sites/displa
 * eIDAS-Node Installation and Configuration Guide v2.7.1.pdf
 
 
+## Configuration
+See [docker/proxy/README.md](docker/proxy/README.md) for organization of folders for config.
+
+| Environment    | Keystore type |
+|----------------|---------------|
+| docker (local) | RSA keystore  |
+| systest        | RSA keystore  |
+| test           | HSM (luna)    |
+| prod           | HSM (luna)    |
+
 ### Run eidas-proxy as docker-compose on your machine for local testing
 
 Add the following to your /etc/hosts file:
@@ -21,9 +31,12 @@ docker-compose up --build
 ```
 
 Test by checking if metadata-endepoint is responding: eidas-proxy:8082/ServiceMetadata
-```
 
-### Run eidas-proxy in test/production environment
-Systest: proxy.eidasnode.dev/ServiceMetadata
-Test: proxy.test.eidasnode.no/ServiceMetadata
-Prod: proxy.eidasnode.no/ServiceMetadata
+
+
+### Test eidas-proxy in test/production environment
+Systest: https://proxy.eidasnode.dev/ServiceMetadata
+
+Test: https://proxy.test.eidasnode.no/ServiceMetadata
+
+Prod: https://proxy.eidasnode.no/ServiceMetadata

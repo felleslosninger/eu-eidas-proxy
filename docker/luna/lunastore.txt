@@ -1,0 +1,2 @@
+tokenlabel:hsm1-digdir-kt
+slot:0

@@ -49,8 +49,8 @@ RUN sed -i -e 's/FINE/WARNING/g' /usr/local/tomcat/conf/logging.properties
 # Fjerner default applikasjoner fra tomcat
 RUN rm -rf /usr/local/tomcat/webapps.dist
 
-COPY docker/bouncycastle/java_bc.security /opt/java/openjdk/conf/security/java_bc.security
 COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1.78.jar
+COPY docker/java-security-providers/java_bc.security /opt/java/openjdk/conf/security/java_bc.security
 
 #HSM
 COPY --from=builder /usr/local/luna /var/usrlocal/luna
@@ -69,6 +69,13 @@ COPY docker/proxy/profiles /etc/config/profiles
 RUN chmod 776 /etc/config/eidas-proxy
 RUN chmod 766 /etc/config/profiles/docker/SignModule_Service*.xml
 
+# temp copy HSM testing files
+COPY docker/luna/list.sh docker/luna/lunastore.txt /etc/config/eidas-proxy/
+RUN chmod 777 /etc/config/eidas-proxy/list.sh && chmod 777 /etc/config/eidas-proxy/lunastore.txt
+RUN cp /var/usrlocal/luna/jsp/64/libLunaAPI.so /opt/java/openjdk/lib/
+
+
+# Scripts for copy config files
 COPY docker/addEnvironmentSpesificConfigFiles.sh docker/updateKeyStoreConfig.sh ${CATALINA_HOME}/bin/
 RUN chmod 755 ${CATALINA_HOME}/bin/addEnvironmentSpesificConfigFiles.sh && chmod 755 ${CATALINA_HOME}/bin/updateKeyStoreConfig.sh
 
