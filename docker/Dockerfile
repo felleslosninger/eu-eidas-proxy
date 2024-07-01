@@ -57,6 +57,7 @@ COPY --from=builder /usr/local/luna /var/usrlocal/luna
 RUN mkdir -p /var/usrlocal/luna/config/certs
 ENV ChrystokiConfigurationPath=/var/usrlocal/luna/config
 
+
 #Tomcat changes
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
 COPY docker/proxy/server.xml ${CATALINA_HOME}/conf/server.xml
