@@ -21,6 +21,4 @@ if [ -f "$SIGNMODULE_SERVICE_FILE_HSM" ]; then
     sed -i "s/TRUSTSTORE_PASSWORD/$TRUSTSTORE_PASSWORD/g" $SIGNMODULE_SERVICE_FILE_HSM
     sed -i "s/KEYSTORE_PASSWORD/$KEYSTORE_PASSWORD/g" $SIGNMODULE_SERVICE_FILE_HSM
     sed -i "s/HSM_ALIAS/$HSM_ALIAS/g" $SIGNMODULE_SERVICE_FILE_HSM
-    # for testing hsm
-    cp /var/usrlocal/luna/jsp/64/libLunaAPI.so /opt/java/openjdk/lib/
 fi

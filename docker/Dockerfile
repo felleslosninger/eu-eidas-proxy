@@ -72,7 +72,7 @@ RUN chmod 766 /etc/config/profiles/docker/SignModule_Service*.xml
 # temp copy HSM testing files
 COPY docker/luna/list.sh docker/luna/lunastore.txt /etc/config/eidas-proxy/
 RUN chmod 777 /etc/config/eidas-proxy/list.sh && chmod 777 /etc/config/eidas-proxy/lunastore.txt
-#RUN cp /var/usrlocal/luna/jsp/64/libLunaAPI.so /opt/java/openjdk/lib/
+RUN cp /var/usrlocal/luna/jsp/64/libLunaAPI.so /opt/java/openjdk/lib/
 
 
 # Scripts for copy config files
