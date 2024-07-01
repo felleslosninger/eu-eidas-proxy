@@ -15,6 +15,9 @@
         </encoder>
     </appender>
 
+    <logger name="eu.eidas.auth.engine.configuration" level="TRACE" additivity="false">
+        <appender-ref ref="APPLICATION"/>
+    </logger>
     <logger name="eu.eidas.node" level="INFO" additivity="false">
         <appender-ref ref="APPLICATION"/>
     </logger>
