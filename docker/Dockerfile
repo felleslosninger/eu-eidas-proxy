@@ -53,10 +53,9 @@ COPY docker/bouncycastle/java_bc.security /opt/java/openjdk/conf/security/java_b
 COPY docker/bouncycastle/bcprov-jdk18on-1.78.jar /usr/local/lib/bcprov-jdk18on-1.78.jar
 
 #HSM
-RUN mkdir -p /var/usrlocal/luna
-COPY --from=builder /usr/local/luna /usr/usrlocal/luna
-ENV ChrystokiConfigurationPath=/usr/usrlocal/luna/config
-COPY docker/luna/Chrystoki.conf /usr/usrlocal/luna/config/
+COPY --from=builder /usr/local/luna /var/usrlocal/luna
+RUN mkdir -p /var/usrlocal/luna/config/certs
+ENV ChrystokiConfigurationPath=/var/usrlocal/luna/config
 
 #Tomcat changes
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
