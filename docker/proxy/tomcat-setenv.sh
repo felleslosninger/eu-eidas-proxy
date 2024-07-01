@@ -14,3 +14,6 @@ export EIDAS_PROXY_CONFIG_REPOSITORY="/etc/config/eidas-proxy/"
 export CLASSPATH=$CLASSPATH:$EIDAS_PROXY_CONFIG_REPOSITORY
 # Auditlogs config: -DLOG_HOME="<myDirectoryName>"
 export LOG_HOME="/usr/local/tomcat/eidas/logs"
+
+#HSM
+export PATH="/var/usrlocal/luna/bin/64:$PATH"

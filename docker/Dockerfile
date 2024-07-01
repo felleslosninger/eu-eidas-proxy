@@ -56,7 +56,7 @@ COPY docker/java-security-providers/java_bc.security /opt/java/openjdk/conf/secu
 COPY --from=builder /usr/local/luna /var/usrlocal/luna
 RUN mkdir -p /var/usrlocal/luna/config/certs
 ENV ChrystokiConfigurationPath=/var/usrlocal/luna/config
-
+RUN cp /var/usrlocal/luna/jsp/64/libLunaAPI.so /opt/java/openjdk/lib/
 
 #Tomcat changes
 COPY docker/proxy/tomcat-setenv.sh ${CATALINA_HOME}/bin/setenv.sh
@@ -70,10 +70,8 @@ RUN chmod 776 /etc/config/eidas-proxy
 RUN chmod 766 /etc/config/profiles/docker/SignModule_Service*.xml
 
 # temp copy HSM testing files
-COPY docker/luna/list.sh docker/luna/lunastore.txt /etc/config/eidas-proxy/
-RUN chmod 777 /etc/config/eidas-proxy/list.sh && chmod 777 /etc/config/eidas-proxy/lunastore.txt
-RUN cp /var/usrlocal/luna/jsp/64/libLunaAPI.so /opt/java/openjdk/lib/
-
+COPY docker/luna/list.sh docker/luna/lunastore.txt ${CATALINA_HOME}/
+RUN chmod 777 ${CATALINA_HOME}/list.sh && chmod 777 ${CATALINA_HOME}/lunastore.txt
 
 # Scripts for copy config files
 COPY docker/addEnvironmentSpesificConfigFiles.sh docker/updateKeyStoreConfig.sh ${CATALINA_HOME}/bin/
